@@ -1,12 +1,12 @@
 package Net::LDAP::Express;
 
-# $Id: Express.pm,v 1.2 2003/09/19 14:08:06 bronto Exp $
+# $Id: Express.pm,v 1.3 2003/09/19 14:12:35 bronto Exp $
 
 use 5.006;
 use strict;
 use warnings;
 
-our $VERSION = '0.03';
+our $VERSION = '0.04';
 
 use Carp ;
 
@@ -523,6 +523,11 @@ parameters are therefore:
 the name or IP address of the directory server we are connecting
 to. Mandatory.
 
+=item port
+
+the port to connect to; if omitted, the 389 will be used. 389 is the
+LDAP standard port.
+
 =item bindDN
 
 bind DN in case of authenticated bind
@@ -642,8 +647,8 @@ array of updated entries.
 =item simplesearch($searchstring)
 
 Searches entries using the new()'s search* and base parameters. Takes
-a search string as argument. Returns a list of entries on success,
-undef on error.
+a search string as argument. Returns a reference to an array of
+entries on success, undef on error.
 
 =item error
 
