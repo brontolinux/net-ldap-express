@@ -1,6 +1,6 @@
 package Net::LDAP::Express;
 
-# $Id: Express.pm,v 1.4 2003/09/26 20:34:43 bronto Exp $
+# $Id: Express.pm,v 1.5 2003/09/26 21:39:07 bronto Exp $
 
 use 5.006;
 use strict;
@@ -228,20 +228,7 @@ sub update {
       return \@success ;
     }
 
-#    # The following code raises an error: bug in Net::LDAP::Message?
-#    $e->changetype('modify') ;
-#    $msg = $e->update($ldap) ;
-
-    # This is a temporary patch, until we know if there is something
-    # wrong on that module, or if we are doing wrong somewhere
-    {
-      my %changes ;
-      foreach my $attr ($e->attributes( nooptions => 1 )) {
-	my @values = $e->get_value($attr) ;
-	$changes{$attr} = @values == 1? $values[0]: \@values ;
-      }
-      $msg = $ldap->modify($e,replace => \%changes) ;
-    }
+    $msg = $e->update($ldap) ;
 
     if ($msg->is_error) {
       # Don't complain if error code is 82
@@ -643,6 +630,12 @@ a new value for the RDN. Returns $entry for success, undef on failure.
 update takes a list of Net::LDAP::Entry objects as arguments and
 commits changes on the directory server. Returns a reference to an
 array of updated entries.
+
+B<NOTE:> if you want to modify an entry, say C<$e>, remember to call
+C<$e-E<gt>changetype('modify')> on it B<before> doing any changes; the
+defined changetype at object creation is C<add> at the moment, which
+results in C<update> trying to create new entries. This could be
+addressed by Net::LDAP::Express in the future, maybe.
 
 =item simplesearch($searchstring)
 
