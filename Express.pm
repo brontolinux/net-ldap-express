@@ -1,12 +1,12 @@
 package Net::LDAP::Express;
 
-# $Id: Express.pm,v 1.3 2003/09/19 14:12:35 bronto Exp $
+# $Id: Express.pm,v 1.4 2003/09/26 20:34:43 bronto Exp $
 
 use 5.006;
 use strict;
 use warnings;
 
-our $VERSION = '0.04';
+our $VERSION = '0.05';
 
 use Carp ;
 
@@ -228,9 +228,9 @@ sub update {
       return \@success ;
     }
 
-    # The following code raises an error: bug in Net::LDAP::Message?
-    # $e->changetype('modify') ;
-    # $msg = $e->update($ldap) ;
+#    # The following code raises an error: bug in Net::LDAP::Message?
+#    $e->changetype('modify') ;
+#    $msg = $e->update($ldap) ;
 
     # This is a temporary patch, until we know if there is something
     # wrong on that module, or if we are doing wrong somewhere
