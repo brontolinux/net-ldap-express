@@ -1,6 +1,6 @@
 use Test::More tests => 20 ;
 
-# $Id: 02filters.t,v 1.1 2003/08/10 15:33:41 bronto Exp $
+# $Id: 02filters.t,v 1.2 2004/12/04 18:10:34 bronto Exp $
 
 my $fulltest  = 20 ;
 my $shorttest = 1 ;
@@ -13,9 +13,9 @@ SKIP: {
   skip "doing local tests only",$fulltest-$shorttest
     unless $ENV{TEST_HOST} ;
 
-  my $server = $ENV{TEST_HOST} || 'localhost' ;
-  my $port   = $ENV{TEST_PORT} || 389 ;
-  my $base   = $ENV{TEST_BASE} || 'ou=simple,o=test' ;
+  my $server = $ENV{TEST_HOST}             || 'localhost' ;
+  my $port   = $ENV{TEST_PORT}             || 389 ;
+  my $base   = "ou=test,$ENV{TEST_BASE}"   || 'ou=simple,o=test' ;
   my %parms  = (host => $server, port => $port, base => $base) ;
 
   my $word  = 'test' ;
@@ -53,9 +53,10 @@ SKIP: {
 	my $w  = $m eq 'a'? $word : "*$word*" ;
 	my $op = $m eq 'a'? '~='  : '=' ;
 	my @filters = "($attrs[0]$op$w)" ;
-	$filters[1] = "($b$filters[0]($attrs[1]$op$w))" ;
-	for (my $i = 2 ; $i <= $#attrs ; $i++) {
-	  push @filters,"($b($attrs[$i]$op$w)$filters[$i-1])" ;
+	my $chain   = $filters[0] ;
+	for (my $i = 1 ; $i <= $#attrs ; $i++) {
+	  $chain .= "($attrs[$i]$op$w)" ;
+	  push @filters,"($b$chain)" ;
 	}
 
 	$filters{$b}{$m} = \@filters ;
@@ -115,7 +116,7 @@ SKIP: {
     my ($b,$m) = @_ ;
     my %parms ;
 
-    $parms{searchbool}  = $b              if $b eq '&' ;
+    $parms{searchbool}  = $b             if $b eq '&' ;
     $parms{searchmatch} = $matchname{$m} if $m eq 's' ;
 
     return \%parms ;

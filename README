@@ -1,4 +1,4 @@
-Net::LDAP::Express version 0.02
+Net::LDAP::Express version 0.10
 ===============================
 
     Net::LDAP::Express is an alternative interface to the fantastic
@@ -97,7 +97,9 @@ The scripts will try to use ou=simple,o=test as their base subtree
 (the ou=simple is there because the module was supposed to be called
 Net::LDAP::Simple in the beginning). If you want to change it, just
 use a TEST_BASE environment variable with the base subtree of your
-choice.
+choice. The tree you use as TEST_BASE will be added a ou=test subtree
+and the tests will take place there. Feel free to get rid of it when
+the tests are finished.
 
 Some tests will try to create and modify entries on the directory
 server, and this requires some privileges. The test script will use
@@ -162,4 +164,4 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
 VERSION INFORMATION
 
-$Id: README,v 1.1 2003/08/10 15:33:41 bronto Exp $
+$Id: README,v 1.2 2004/12/04 18:10:20 bronto Exp $

@@ -1,12 +1,12 @@
 package Net::LDAP::Express;
 
-# $Id: Express.pm,v 1.5 2003/09/26 21:39:07 bronto Exp $
+# $Id: Express.pm,v 1.6 2004/12/04 18:10:20 bronto Exp $
 
 use 5.006;
 use strict;
 use warnings;
 
-our $VERSION = '0.05';
+our $VERSION = '0.10';
 
 use Carp ;
 
@@ -36,8 +36,8 @@ sub new {
 
   # Test for onlyattrs not overlapping with searchextras; in
   # case they do, warn
-  if (exists $localparms{onlyattrs} and
-      exists $localparms{searchextras}) {
+  if (defined $localparms{onlyattrs} and
+      defined $localparms{searchextras}) {
     carp "Useless use of parameter onlyattrs with searchextras" if $^W ;
   }
 
@@ -89,7 +89,7 @@ sub new {
     $lasterr[0] = shift ;
 
     # Update cache, if needed
-    $errcache{$lasterr[0]} ||= shift ;
+    $errcache{$lasterr[0]} = shift unless exists $errcache{$lasterr[0]} ;
 
     # Get error message from cache
     $lasterr[1] = $errcache{$lasterr[0]} ;
@@ -288,29 +288,24 @@ sub _makefilter {
   my ($query) = @_ ;
 
   my $bool  = $ldap->_searchbool  ? $ldap->_searchbool  : '|'  ;
+  my $match = $ldap->_searchmatch ;
 
   my $op    = '~=' ;
-  $op = '=' if $ldap->_searchmatch and $ldap->_searchmatch eq 'substr' ;
+
+  if ($match) {
+    $op = '=' if $match eq 'substr' or $match eq 'exact' ;
+    $query = qq/*$query*/ if $match eq 'substr';
+  }
 
   my @attrs = @{$ldap->_searchattrs} ;
-
-  $query    = qq/*$query*/ if $op eq '=' ;
 
   my $filter ;
   if (@attrs == 1) {
     $filter = qq/($attrs[0]$op$query)/ ;
-  }
-
-  if (@attrs == 2) {
-    $filter = qq/($bool($attrs[0]$op$query)($attrs[1]$op$query))/ ;
-  }
-
-  if (@attrs > 2) {
-    $filter = qq/($bool($attrs[0]$op$query)($attrs[1]$op$query))/ ;
-    splice @attrs,0,2 ;
-    while (my $attr = shift @attrs) {
-      $filter = qq/($bool($attr$op$query)$filter)/ ;
-    }
+  } else {
+    $filter = "($bool".
+              join("",map("($_$op$query)",@attrs)).
+	      ")" ;
   }
 
   #carp "Search filter is $filter" if DEBUG ;
@@ -363,6 +358,16 @@ __END__
 =head1 NAME
 
 Net::LDAP::Express - Simplified interface for Net::LDAP
+
+=head1 WARNING
+
+With version 0.10 the return value for the C<error> method has slightly
+changed; on no-error condition (error code 0) it returns a null string,
+and not C<undef> any more. Code that simply checked for boolean true/false
+value will continue to work as expected, but code that relied on C<undef>
+and the C<defined> function won't!
+B<Please let me know if this behaviour breaks
+any existing application!>. Thanks.
 
 =head1 SYNOPSIS
 
@@ -542,7 +547,9 @@ operators are | and &.
 By default, an 'approx' search is performed by simplesearch(); for
 those directory servers that doesn't support the ~= operator it is
 possible to request a substring search specifying the value 'substr'
-for the searchmatch parameter.
+for the searchmatch parameter.  Alternatively, if this is set to 'exact'
+then an exact search will be done - useful when fields are not indexed
+for substring searching.
 
 =item searchextras
 
@@ -657,6 +664,9 @@ Returns last error's code
 =head1 AUTHOR
 
 Marco Marongiu, E<lt>bronto@cpan.orgE<gt>
+
+Original patch for exact matching (code and documentation) was
+kindly contributed by Gordon Lack.
 
 =head1 SEE ALSO
 

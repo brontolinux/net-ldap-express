@@ -1,6 +1,6 @@
-use Test::More tests => 26 ;
+use Test::More tests => 25 ;
 
-# $Id: 01basic.t,v 1.1 2003/08/10 15:33:41 bronto Exp $
+# $Id: 01basic.t,v 1.2 2004/12/04 18:10:34 bronto Exp $
 
 my $fulltest  = 26 ;
 my $shorttest = 2 ;
@@ -13,11 +13,11 @@ BEGIN {
 SKIP: {
   skip "doing local tests only",$fulltest-$shorttest
     unless $ENV{TEST_HOST} ;
-  my $server = $ENV{TEST_HOST}   || 'localhost' ;
-  my $port   = $ENV{TEST_PORT}   || 389 ;
-  my $base   = $ENV{TEST_BASE}   || 'ou=simple,o=test' ;
-  my $binddn = $ENV{TEST_BINDDN} || 'cn=admin,o=test' ;
-  my $bindpw = $ENV{TEST_BINDPW} || 'secret' ;
+  my $server = $ENV{TEST_HOST}             || 'localhost' ;
+  my $port   = $ENV{TEST_PORT}             || 389 ;
+  my $base   = "ou=test,$ENV{TEST_BASE}"   || 'ou=simple,o=test' ;
+  my $binddn = $ENV{TEST_BINDDN}           || 'cn=admin,o=test' ;
+  my $bindpw = $ENV{TEST_BINDPW}           || 'secret' ;
   my @search = qw(uid mail cn objectclass) ;
   my @only   = qw(cn) ;
   my @sortby = qw(sn givenname) ;
@@ -42,21 +42,12 @@ SKIP: {
   {
     my $r ;
     my $root = Net::LDAP::Entry->new ;
-    $root->dn("o=test") ;
+    $root->dn($base) ;
     $root->add(
-	       objectclass => [qw(top organization)],
-	       o => 'test',
+	       objectclass => [qw(top organizationalUnit)],
+	       ou => 'test',
 	      ) ;
     $r = $ldap->add_many($root) ;
-    ok(@$r == 1 or $ldap->errcode == 68) ; # Ok if already exists
-
-    my $subtree = Net::LDAP::Entry->new ;
-    $subtree->dn("ou=simple,o=test") ;
-    $subtree->add(
-		  objectclass => [qw(top organizationalUnit)],
-		  ou => 'simple',
-		 ) ;
-    $r = $ldap->add_many($subtree) ;
     ok(@$r == 1 or $ldap->errcode == 68) ; # Ok if already exists
   }
 
@@ -84,7 +75,7 @@ SKIP: {
 
     my $r = $ldap->add_many(@e) ;
     cmp_ok(@$r,'==',@e,'add') ;
-    is($ldap->error,undef,'error code for add') ;
+    is($ldap->error,'','error code for add') ;
   }
 
 
@@ -92,7 +83,7 @@ SKIP: {
     # Search
     my $entries = $ldap->simplesearch('person') ;
     ok(defined($entries),"search") ;
-    is($ldap->error,undef,'error code for search') ;
+    is($ldap->error,'','error code for search') ;
 
     # Modify and update
     foreach my $e (@$entries) {
@@ -101,7 +92,7 @@ SKIP: {
 
     my $r = $ldap->update(@$entries) ;
     cmp_ok(@$r,'==',@$entries,'update') ;
-    is($ldap->error,undef,'error code for update') ;
+    is($ldap->error,'','error code for update') ;
   }
 
   {
@@ -110,13 +101,13 @@ SKIP: {
     # Search again, and rename
     my $entries = $ldap->simplesearch('person') ;
     ok(defined($entries),"search") ;
-    is($ldap->error,undef,'error code for search') ;
+    is($ldap->error,'','error code for search') ;
     cmp_ok(@$entries,'>=',3) ;
 
     # Rename the first entry
     $e = shift @$entries ;
     $r = $ldap->rename($e,'cn=Graham Barr') ;
-    is($ldap->error,undef,'rename') ;
+    is($ldap->error,'','rename') ;
   }
 
   # Search and return sorted
@@ -131,7 +122,7 @@ SKIP: {
 				       searchattrs => \@search) ;
     my $entries = $ldap->simplesearch('person') ;
     ok(defined($entries),"sorted search returns entries") ;
-    is($ldap->error,undef,'error code for sorted search') ;
+    is($ldap->error,'','error code for sorted search') ;
 
     # Check for sortedness
     my @sorted_from_ldap ;
@@ -164,6 +155,6 @@ SKIP: {
 
     my $r = $ldap->delete_many(@$entries) ;
     cmp_ok(@$r,'==',@$entries,'delete') ;
-    is($ldap->error,undef,'error code for delete') ;
+    is($ldap->error,'','error code for delete') ;
   }
 }
