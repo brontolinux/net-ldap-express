@@ -1,12 +1,12 @@
 package Net::LDAP::Express;
 
-# $Id: Express.pm,v 1.1 2003/08/10 15:33:41 bronto Exp $
+# $Id: Express.pm,v 1.2 2003/09/19 14:08:06 bronto Exp $
 
 use 5.006;
 use strict;
 use warnings;
 
-our $VERSION = '0.02';
+our $VERSION = '0.03';
 
 use Carp ;
 
@@ -228,7 +228,20 @@ sub update {
       return \@success ;
     }
 
-    $msg = $e->update($ldap) ;
+    # The following code raises an error: bug in Net::LDAP::Message?
+    # $e->changetype('modify') ;
+    # $msg = $e->update($ldap) ;
+
+    # This is a temporary patch, until we know if there is something
+    # wrong on that module, or if we are doing wrong somewhere
+    {
+      my %changes ;
+      foreach my $attr ($e->attributes( nooptions => 1 )) {
+	my @values = $e->get_value($attr) ;
+	$changes{$attr} = @values == 1? $values[0]: \@values ;
+      }
+      $msg = $ldap->modify($e,replace => \%changes) ;
+    }
 
     if ($msg->is_error) {
       # Don't complain if error code is 82
