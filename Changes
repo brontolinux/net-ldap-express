@@ -1,0 +1,16 @@
+Revision history for Perl extension Net::LDAP::Express.
+
+$Id: Changes,v 1.1 2003/08/10 15:33:41 bronto Exp $
+
+0.02  Sun May 18 17:00:38 CEST 2003
+	- modified Makefile.PL to require Test::More (no specific
+	  version)
+        - added the sort_by parameter, so that search results from
+	  simplesearch are sorted by the specified attributes
+	- optimized code in search methods; now, for each instance,
+	  search parameters are calculated once
+
+0.01  Mon Apr 14 14:08:17 2003
+	- original version; created by h2xs 1.21 with options
+		-XA Net::LDAP::Express
+
