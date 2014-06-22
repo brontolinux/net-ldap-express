@@ -1,8 +1,8 @@
 use Test::More tests => 25 ;
 
-# $Id: 01basic.t,v 1.2 2004/12/04 18:10:34 bronto Exp $
+# $Id: 01basic.t,v 1.3 2014/06/22 20:20:19 bronto Exp $
 
-my $fulltest  = 26 ;
+my $fulltest  = 25 ;
 my $shorttest = 2 ;
 
 BEGIN {

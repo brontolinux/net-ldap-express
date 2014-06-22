@@ -1,4 +1,4 @@
-Net::LDAP::Express version 0.10
+Net::LDAP::Express version 0.11
 ===============================
 
     Net::LDAP::Express is an alternative interface to the fantastic
@@ -140,6 +140,8 @@ suggestions and opinions. Among them:
 
 * John Woodell, that suggested me to add the "sort_by" feature;
 
+* Gordon Lack, for the "exact" search feature;
+
 * and, obviously, Graham Barr! 
 
 
@@ -164,4 +166,4 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
 VERSION INFORMATION
 
-$Id: README,v 1.2 2004/12/04 18:10:20 bronto Exp $
+$Id: README,v 1.3 2014/06/22 20:19:55 bronto Exp $

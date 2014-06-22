@@ -1,6 +1,9 @@
 Revision history for Perl extension Net::LDAP::Express.
 
-$Id: Changes,v 1.2 2004/12/04 18:10:20 bronto Exp $
+$Id: Changes,v 1.3 2014/06/22 20:19:55 bronto Exp $
+
+0.11 Mon Dec  6 14:11:14 CET 2004
+     - error in the number of test in 01basic.t: fixed
 
 0.10 Sat Dec  4 18:31:32 CET 2004
      - applied patches from Gordon Lack to do exact searches: exact
