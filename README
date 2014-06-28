@@ -1,4 +1,4 @@
-Net::LDAP::Express version 0.11
+Net::LDAP::Express version 0.12
 ===============================
 
     Net::LDAP::Express is an alternative interface to the fantastic
@@ -44,21 +44,15 @@ Net::LDAP::Express version 0.11
 
 NOTES ABOUT THIS RELEASE
 
-This is the second release of Net::LDAP::Express. The first release
-seemed to work well, so the target for this second release is to see
-if it proves useful to be useful in its target cases and that it
-hasn't critical bugs.
+This is a fix for a bug filed against release 0.11 by Dag-Erling Smørgrav.
+The fix itself is a one line change, so don't expect anything new.
 
-It isn't optimized, but I am beginning to working on it.
+The code is now more than 10 years old and it could use more love than
+I can provide. If you're able and willing to improve the code, please
+do. One thing that this code is waiting for is switching to a cleaner
+delegation approach than the current subclassing.
 
-Maybe the code isn't that clean. Maybe it even isn't elegant. I
-consider these things minor bugs that I'll correct along the way. For
-the moment, please check that this code works and only after that give
-me all the hints you find useful to make the code in this module
-better.
-
-This module is not (yet?) part of the perl-ldap distribution and is
-being developed indipendendently, at the moment.
+This module is not part of the perl-ldap distribution.
 
 
 INSTALLATION
@@ -121,6 +115,8 @@ CREDITS
 I would like to thank all the people that helped me with their
 suggestions and opinions. Among them:
 
+* Dag-Erling Smørgrav for submitting bug #96007
+
 * submersible_toaster of perlmonks
   (http://perlmonks.org/index.pl?node_id=195273), that first gave me
   his encouragement to develop this module; 
@@ -147,7 +143,7 @@ suggestions and opinions. Among them:
 
 COPYRIGHT AND LICENCE
 
-Copyright (C) 2003 Marco Marongiu
+Copyright (C) 2003-2014 Marco Marongiu
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -162,8 +158,3 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
-
-
-VERSION INFORMATION
-
-$Id: README,v 1.3 2014/06/22 20:19:55 bronto Exp $

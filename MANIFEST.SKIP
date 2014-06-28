@@ -6,3 +6,10 @@
 ^etc$
 /?\.\#
 CVS
+^\.git
+^blib
+META.yml
+MYMETA.json
+MYMETA.yml
+pm_to_blib
+

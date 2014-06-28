@@ -1,12 +1,10 @@
 package Net::LDAP::Express;
 
-# $Id: Express.pm,v 1.7 2014/06/22 20:19:55 bronto Exp $
-
 use 5.006;
 use strict;
 use warnings;
 
-our $VERSION = '0.11';
+our $VERSION = '0.12';
 
 use Carp ;
 
@@ -43,7 +41,6 @@ sub new {
 
   # try connection
   my $ldap = $class->SUPER::new($host,%args) ;
-  eval { $ldap->isa('Net::LDAP') } ;
   croak "Cannot connect to $host: $@" if $@ ;
 
   # bind if necessary

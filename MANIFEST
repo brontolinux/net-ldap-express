@@ -1,8 +1,7 @@
 Changes
+Express.pm
 Makefile.PL
 README
-Express.pm
-TODO
 t/01basic.t
 t/02filters.t
-META.yml                                 Module meta-data (added by MakeMaker)
+TODO
