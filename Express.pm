@@ -4,7 +4,7 @@ use 5.006;
 use strict;
 use warnings;
 
-our $VERSION = '0.11-bug96007.1';
+our $VERSION = '0.12';
 
 use Carp ;
 
